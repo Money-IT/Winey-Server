@@ -1,6 +1,7 @@
 package org.winey.server.service;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,8 +31,7 @@ public class UserService {
                 Error.NOT_FOUND_USER_EXCEPTION.getMessage()));
 
         LocalDateTime twoWeeksAgo = LocalDateTime.now().minusWeeks(2);
-        LocalDateTime hundredDaysAgo = LocalDateTime.now().minusDays(100);
-        Long amountSavedHundredDays = feedRepository.getSavedAmountForPeriod(user, hundredDaysAgo);
+        Long createdDday = Math.abs(ChronoUnit.DAYS.between(user.getCreatedAt(), LocalDateTime.now())) + 1;
         Long amountSavedTwoWeeks = feedRepository.getSavedAmountForPeriod(user, twoWeeksAgo);
         Long amountSpentTwoWeeks = feedRepository.getSpentAmountForPeriod(user, twoWeeksAgo);
 
@@ -43,12 +43,11 @@ public class UserService {
         long remainingAmount = nextUserLevel == null ? 0L : nextUserLevel.getMinimumAmount() - savedAmountOfUser;
         long remainingCount = nextUserLevel == null ? 0L : nextUserLevel.getMinimumCount() - savedCountOfUser;
 
-        return UserResponseDto.of(user.getUserId(), user.getNickname(),
+        return UserResponseDto.of(user.getUserId(), createdDday, user.getNickname(),
             user.getUserLevel().getName(),
             user.getFcmIsAllowed(),
             savedAmountOfUser,
             savedCountOfUser,
-            amountSavedHundredDays == null ? 0L : amountSavedHundredDays,
             amountSavedTwoWeeks == null ? 0L : amountSavedTwoWeeks,
             amountSpentTwoWeeks == null ? 0L : amountSpentTwoWeeks,
             remainingAmount < 0 ? 0L : remainingAmount,
