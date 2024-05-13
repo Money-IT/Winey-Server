@@ -1,6 +1,5 @@
 package org.winey.server.controller.response.user;
 
-import java.time.LocalDate;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,7 +18,7 @@ public class UserResponseDto {
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
     public static class UserData {
         private Long userId;
-        private LocalDate userCreatedAt;
+        private Long createdDday;
         private String nickname;
         private String userLevel;
         private Boolean fcmIsAllowed;
@@ -31,11 +30,10 @@ public class UserResponseDto {
         private Long remainingCount;
     }
 
-
-    public static UserResponseDto of(Long userId, LocalDate userCreatedAt, String nickname, String userLevel,
+    public static UserResponseDto of(Long userId, Long createdDday, String nickname, String userLevel,
         Boolean fcmIsAllowed, Long accumulatedAmount,Long accumulatedCount, Long amountSavedTwoWeeks,
         Long amountSpentTwoWeeks, Long remainingAmount, Long remainingCount) {
-        UserData userData = new UserData(userId, userCreatedAt, nickname, userLevel, fcmIsAllowed, accumulatedAmount, accumulatedCount,
+        UserData userData = new UserData(userId, createdDday, nickname, userLevel, fcmIsAllowed, accumulatedAmount, accumulatedCount,
             amountSavedTwoWeeks, amountSpentTwoWeeks,remainingAmount,remainingCount);
         return new UserResponseDto(userData);
     }
