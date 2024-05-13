@@ -30,8 +30,6 @@ public class UserService {
                 Error.NOT_FOUND_USER_EXCEPTION.getMessage()));
 
         LocalDateTime twoWeeksAgo = LocalDateTime.now().minusWeeks(2);
-        LocalDateTime hundredDaysAgo = LocalDateTime.now().minusDays(100);
-        Long amountSavedHundredDays = feedRepository.getSavedAmountForPeriod(user, hundredDaysAgo);
         Long amountSavedTwoWeeks = feedRepository.getSavedAmountForPeriod(user, twoWeeksAgo);
         Long amountSpentTwoWeeks = feedRepository.getSpentAmountForPeriod(user, twoWeeksAgo);
 
@@ -43,12 +41,11 @@ public class UserService {
         long remainingAmount = nextUserLevel == null ? 0L : nextUserLevel.getMinimumAmount() - savedAmountOfUser;
         long remainingCount = nextUserLevel == null ? 0L : nextUserLevel.getMinimumCount() - savedCountOfUser;
 
-        return UserResponseDto.of(user.getUserId(), user.getNickname(),
+        return UserResponseDto.of(user.getUserId(), user.getCreatedAt().toLocalDate(), user.getNickname(),
             user.getUserLevel().getName(),
             user.getFcmIsAllowed(),
             savedAmountOfUser,
             savedCountOfUser,
-            amountSavedHundredDays == null ? 0L : amountSavedHundredDays,
             amountSavedTwoWeeks == null ? 0L : amountSavedTwoWeeks,
             amountSpentTwoWeeks == null ? 0L : amountSpentTwoWeeks,
             remainingAmount < 0 ? 0L : remainingAmount,
