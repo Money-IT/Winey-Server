@@ -68,6 +68,7 @@ public enum Error {
     UNPROCESSABLE_ENTITY_DELETE_EXCEPTION(HttpStatus.UNPROCESSABLE_ENTITY, "클라의 요청을 이해했지만 삭제하지 못했습니다."),
     UNPROCESSABLE_FIND_USERS(HttpStatus.UNPROCESSABLE_ENTITY, "요청을 이해했지만 유저들을 찾을 수 없었습니다."),
     UNPROCESSABLE_SEND_TO_FIREBASE(HttpStatus.UNPROCESSABLE_ENTITY, "파이어베이스로 전송하는 과정에서 에러가 발생했습니다."),
+    UNPROCESSABLE_KAKAO_SERVER_EXCEPTION(HttpStatus.UNPROCESSABLE_ENTITY, "요청을 이해했지만 카카오 서버에러가 발생했습니다."),
 
     /**
      * 500 INTERNAL SERVER ERROR

@@ -124,6 +124,10 @@ public class AuthService {
         if (user == null) {
             throw new NotFoundException(Error.NOT_FOUND_USER_EXCEPTION, Error.NOT_FOUND_USER_EXCEPTION.getMessage());
         }
+        if (user.getSocialType() == SocialType.KAKAO){
+            String deleteSocialId = kakaoSignInService.withdrawKakao(user.getSocialId());
+            System.out.println(deleteSocialId);
+        }
 
         // 유저가 생성한 반응과 관련된 알림 삭제
         notiRepository.deleteByRequestUserId(userId);
