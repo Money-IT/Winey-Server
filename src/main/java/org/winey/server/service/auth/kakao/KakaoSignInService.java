@@ -3,6 +3,7 @@ package org.winey.server.service.auth.kakao;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonArray;
 
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -14,12 +15,9 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.winey.server.exception.Error;
-import org.winey.server.exception.model.CustomException;
 import org.winey.server.exception.model.UnprocessableEntityException;
 
 import java.util.HashMap;
-import java.util.Map;
-
 @Service
 @RequiredArgsConstructor
 public class KakaoSignInService {

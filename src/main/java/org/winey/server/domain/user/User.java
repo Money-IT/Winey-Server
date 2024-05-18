@@ -23,7 +23,6 @@ import org.winey.server.domain.AuditingTimeEntity;
 import org.winey.server.domain.comment.Comment;
 import org.winey.server.domain.feed.Feed;
 import org.winey.server.domain.feed.FeedLike;
-import org.winey.server.domain.goal.Goal;
 import org.winey.server.domain.notification.Notification;
 import org.winey.server.domain.recommend.Recommend;
 
@@ -67,10 +66,8 @@ public class User extends AuditingTimeEntity {
     private Long savedCount;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, mappedBy = "user", orphanRemoval = true)
-    private List<Goal> goals;
-
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, mappedBy = "user", orphanRemoval = true)
     private List<Recommend> recommends;
+
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, mappedBy = "user", orphanRemoval = true)
     private List<Feed> feeds;
 
