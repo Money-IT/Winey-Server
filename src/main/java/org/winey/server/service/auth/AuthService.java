@@ -136,6 +136,10 @@ public class AuthService {
         if (user == null) {
             throw new NotFoundException(Error.NOT_FOUND_USER_EXCEPTION, Error.NOT_FOUND_USER_EXCEPTION.getMessage());
         }
+        if (user.getSocialType() == SocialType.KAKAO){
+            String deleteSocialId = kakaoSignInService.withdrawKakao(user.getSocialId());
+            System.out.println(deleteSocialId);
+        }
         System.out.println("User: " + user);
         System.out.println("Goals: " + user.getGoals());
         System.out.println("Recommends: " + user.getRecommends());
