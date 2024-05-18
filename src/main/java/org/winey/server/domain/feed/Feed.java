@@ -9,7 +9,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.winey.server.domain.AuditingTimeEntity;
 import org.winey.server.domain.comment.Comment;
-import org.winey.server.domain.goal.Goal;
 import org.winey.server.domain.user.User;
 
 @Getter
@@ -39,10 +38,6 @@ public class Feed extends AuditingTimeEntity {
     @Column(nullable = false)
     private Long feedMoney;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "goal_id")
-    private Goal goal;
-
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, mappedBy = "feed", orphanRemoval = true)
     private List<FeedLike> feedLikes;
 
@@ -56,6 +51,5 @@ public class Feed extends AuditingTimeEntity {
         this.feedImage = feedImage;
         this.feedMoney = feedMoney;
         this.feedType = feedType;
-        this.goal = null;
     }
 }
