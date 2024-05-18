@@ -3,15 +3,12 @@ package org.winey.server.service.auth;
 import java.util.Random;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.winey.server.config.jwt.JwtService;
 import org.winey.server.controller.request.auth.SignInRequestDto;
 import org.winey.server.controller.response.auth.SignInResponseDto;
 import org.winey.server.controller.response.auth.TokenResponseDto;
-import org.winey.server.domain.goal.Goal;
-import org.winey.server.domain.goal.GoalType;
 import org.winey.server.domain.notification.NotiType;
 import org.winey.server.domain.notification.Notification;
 import org.winey.server.domain.user.SocialType;
@@ -20,23 +17,19 @@ import org.winey.server.exception.Error;
 import org.winey.server.exception.model.NotFoundException;
 import org.winey.server.exception.model.UnprocessableEntityException;
 import org.winey.server.infrastructure.BlockUserRepository;
-import org.winey.server.infrastructure.GoalRepository;
 import org.winey.server.infrastructure.NotiRepository;
 import org.winey.server.infrastructure.UserRepository;
 import org.winey.server.service.auth.apple.AppleSignInService;
 import org.winey.server.service.auth.kakao.KakaoSignInService;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthService {
     private final AppleSignInService appleSignInService;
     private final KakaoSignInService kakaoSignInService;
     private final JwtService jwtService;
-
     private final UserRepository userRepository;
     private final BlockUserRepository blockUserRepository;
-    private final GoalRepository goalRepository;
 
 
     private final Long TOKEN_EXPIRATION_TIME_ACCESS = 100 * 24 * 60 * 60 * 1000L;
@@ -47,12 +40,9 @@ public class AuthService {
     @Transactional
     public SignInResponseDto signIn(String socialAccessToken, SignInRequestDto requestDto) {
         SocialType socialType = SocialType.valueOf(requestDto.getSocialType());
-        log.info("after get social type");
         String socialId = login(socialType, socialAccessToken);
-        log.info("after get social info");
 
         Boolean isRegistered = userRepository.existsBySocialIdAndSocialType(socialId, socialType);
-        log.info("after check isRegistered");
         if (!isRegistered) {
             String randomString= new Random().ints(6, 0, 36).mapToObj(i -> Character.toString("abcdefghijklmnopqrstuvwxyz0123456789".charAt(i))).collect(Collectors.joining());
             while (userRepository.existsByNickname("위니"+randomString)) {
@@ -75,12 +65,6 @@ public class AuthService {
                     .build();
             newNoti.updateLinkId(null);
             notiRepository.save(newNoti);
-
-            Goal newGoal = Goal.builder()
-                .goalType(GoalType.COMMONER_GOAL)
-                .user(newUser)
-                .build();
-            goalRepository.save(newGoal);
         }
 
         User user = userRepository.findBySocialIdAndSocialType(socialId, socialType)
@@ -140,12 +124,6 @@ public class AuthService {
         if (user == null) {
             throw new NotFoundException(Error.NOT_FOUND_USER_EXCEPTION, Error.NOT_FOUND_USER_EXCEPTION.getMessage());
         }
-        System.out.println("User: " + user);
-        System.out.println("Goals: " + user.getGoals());
-        System.out.println("Recommends: " + user.getRecommends());
-        System.out.println("Feeds: " + user.getFeeds());
-        System.out.println("FeedLikes: " + user.getFeedLikes());
-        System.out.println("Comments: "+ user.getComments());
 
         // 유저가 생성한 반응과 관련된 알림 삭제
         notiRepository.deleteByRequestUserId(userId);
