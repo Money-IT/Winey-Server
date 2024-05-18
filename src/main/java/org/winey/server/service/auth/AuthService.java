@@ -3,7 +3,6 @@ package org.winey.server.service.auth;
 import java.util.Random;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.winey.server.config.jwt.JwtService;
@@ -26,7 +25,6 @@ import org.winey.server.infrastructure.UserRepository;
 import org.winey.server.service.auth.apple.AppleSignInService;
 import org.winey.server.service.auth.kakao.KakaoSignInService;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -47,12 +45,9 @@ public class AuthService {
     @Transactional
     public SignInResponseDto signIn(String socialAccessToken, SignInRequestDto requestDto) {
         SocialType socialType = SocialType.valueOf(requestDto.getSocialType());
-        log.info("after get social type");
         String socialId = login(socialType, socialAccessToken);
-        log.info("after get social info");
 
         Boolean isRegistered = userRepository.existsBySocialIdAndSocialType(socialId, socialType);
-        log.info("after check isRegistered");
         if (!isRegistered) {
             String randomString= new Random().ints(6, 0, 36).mapToObj(i -> Character.toString("abcdefghijklmnopqrstuvwxyz0123456789".charAt(i))).collect(Collectors.joining());
             while (userRepository.existsByNickname("위니"+randomString)) {
